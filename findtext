@@ -1,0 +1,5 @@
+#!/bin/bash
+#script to search through a directory to find files that
+#match a given text pattern and print the paths of the files
+
+
