@@ -6,3 +6,5 @@ echo "$# arguments given"
 if [[ $# -lt 2 ]]; then
 	echo "USAGE ERROR"
 fi
+echo $1
+grep -r $1 $2
