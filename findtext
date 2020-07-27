@@ -1,10 +1,9 @@
 #!/usr/bin/bash
 #script to search through a directory to find files that
 #match a given text pattern and print the paths of the files
-
-echo "$# arguments given" 
 if [[ $# -lt 2 ]]; then
 	echo "USAGE:  findtext [--program= Program] PATTERN DIRECTORY"
+	exit 1
 fi
 IN=""
 COMMAND=""
@@ -13,7 +12,6 @@ COMMAND=""
 for i in "$@"; do
 	if [[ $i =~ --program=* ]]; then
 		IN=$i
-		echo "--program is set"
 		#use IFS with '=' as the delimiter to split --program=Program to just Program
 		IFS='=' read -r -a array <<< $IN
 		COMMAND=${array[1]}
@@ -23,12 +21,33 @@ for i in "$@"; do
 		break
 	fi
 done
-
-echo $1
-
+PATTERN=$1
+shift
 
 #Currently greps for a given pattern in a specified directory
-
-#for((x=1; x<=10; x++)); do
-#	grep -rl $1 ~/$2
-#done
+if [ -z "$COMMAND" ]; then	#COMMAND is empty if no --program option was supplied 
+	for var in "$@"
+	do	
+		
+		targets=($(grep -rl $PATTERN "$1" ))
+		shift
+		for i in "${targets[@]}"
+		do
+			temp=$(readlink -f $i)
+			echo $temp
+		done
+	done
+else #Executes if --program option was supplied
+	for var in "$@"
+	do	
+		
+		targets=($(grep -rl $PATTERN $1 ))
+		shift
+		for i in "${targets[@]}"
+		do
+			temp=$(readlink -f $i)
+			$COMMAND $temp
+		done
+	done
+fi
+exit 0
