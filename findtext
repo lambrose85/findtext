@@ -4,7 +4,31 @@
 
 echo "$# arguments given" 
 if [[ $# -lt 2 ]]; then
-	echo "USAGE ERROR"
+	echo "USAGE:  findtext [--program= Program] PATTERN DIRECTORY"
 fi
+IN=""
+COMMAND=""
+#Checks to see if program option is set or not
+#if set, value will be assigned to a variable
+for i in "$@"; do
+	if [[ $i =~ --program=* ]]; then
+		IN=$i
+		echo "--program is set"
+		#use IFS with '=' as the delimiter to split --program=Program to just Program
+		IFS='=' read -r -a array <<< $IN
+		COMMAND=${array[1]}
+		echo $COMMAND
+		#shift args for easier access
+		shift
+		break
+	fi
+done
+
 echo $1
-grep -r $1 $2
+
+
+#Currently greps for a given pattern in a specified directory
+
+#for((x=1; x<=10; x++)); do
+#	grep -rl $1 ~/$2
+#done
